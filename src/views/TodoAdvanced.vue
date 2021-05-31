@@ -1,51 +1,73 @@
 <template>
   <div>
-    <input type="text" @keyup.enter="addTodo()" v-model="inputVal" />
-    <div>
-      <p v-for="(item,index) in todos" :key="index" @click.once="markDone(index)" @dblclick="deleteTodo(index)" :class="item.status">
-        {{item.task}}
-      </p>
-    </div>
-    <br>
-    <button @click="clearAll()">Clear All</button>
+    <list-items>
+      <template v-slot:title>
+        To Do List
+      </template>
+      <template v-slot:contnet>
+        <input type="text" @keyup.enter="addTodo()" v-model="$store.state.inputVal" />
+        <div>
+          <p v-for="(item,index) in $store.state.todos" :key="index" @click.once="markDone(index)" @dblclick="deleteTodo(index)" :class="item.status">
+            {{item.task}}
+          </p>
+        </div>
+      </template>
+    </list-items>
+    <button @click="clearAll()" class="btn-style">Clear All</button>
   </div>
 </template>
 
 <script>
-export default ({
+import ListItems from "@/components/ListItems";
+import {mapActions} from 'vuex';
+import {mapGetters} from 'vuex';
+
+export default {
+  components: {
+    "list-items": ListItems,
+  },
   data() {
     return {
-      todos: [{
-        'task': '吃好',
-        'status': 'undone'
-      },
-      {
-        'task': '睡飽',
-        'status': 'undone'
-      },
-      {
-        'task': '多運動',
-        'status': 'undone'
-      }],
-      inputVal: '',
+      // todos: [{
+      //   'task': '吃好',
+      //   'status': 'undone'
+      // },
+      // {
+      //   'task': '睡飽',
+      //   'status': 'undone'
+      // },
+      // {
+      //   'task': '多運動',
+      //   'status': 'undone'
+      // }],
+      // inputVal: '',
     }
   },
   methods: {
     addTodo() {
-      this.todos.push({'task': this.inputVal,'status':'not-done','style': 'none'});
-      this.inputVal = '';
-    },
-    markDone(index) {
-      this.todos[index].status = 'done'
+      this.$store.state.todos.push({'task': this.$store.state.inputVal,'status':'not-done','style': 'none'});
+      this.$store.state.inputVal = '';
+      // this.todos.push({'task': this.inputVal,'status':'not-done','style': 'none'});
+      // this.inputVal = '';
     },
     deleteTodo(index) {
-      this.todos.splice(index,1)
+      this.$store.state.todos.splice(index,1)
     },
-    clearAll() {
-      this.todos = [];
-    },
+    ...mapActions ([
+      'markDone',
+      'clearAll'
+    ])
+    // markDone(index) {
+    //   //this.$store.state.todos[index].status = 'done'
+    //   this.$store.dispatch('markDone',index);
+    // },
+    // clearAll() {
+    //   // this.$store.state.todos = [];
+    //   // this.$store.commit('clearAll');
+    //   this.$store.dispatch('clearAll');
+    // },
   }
-})
+}
 </script>
 
 <style scoped>
@@ -55,7 +77,7 @@ export default ({
 .done {
   text-decoration: line-through;
 }
-button {
+.btn-style {
   width: 165px;
   padding: 5px;
   background-color: #65809b;
@@ -64,13 +86,13 @@ button {
   border-radius: 5px;
 }
 
-button:hover {
+.btn-style:hover {
   background-color: #516b85;
   border: 2px solid #516b85;
   cursor: pointer;
 }
 
-button:disabled {
+.btn-style:disabled {
   background-color: lightgray;
   border: 2px solid lightgray;
   cursor: not-allowed;
