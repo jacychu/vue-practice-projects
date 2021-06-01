@@ -5,9 +5,9 @@
         To Do List
       </template>
       <template v-slot:contnet>
-        <input type="text" @keyup.enter="addTodo()" v-model="$store.state.inputVal" />
+        <input type="text" @keyup.enter="addTodo()" v-model="getInputVal" />
         <div>
-          <p v-for="(item,index) in $store.state.todos" :key="index" @click.once="markDone(index)" @dblclick="deleteTodo(index)" :class="item.status">
+          <p v-for="(item,index) in allTodos" :key="index" @click.once="markDone(index)" @dblclick="deleteTodo(index)" :class="item.status">
             {{item.task}}
           </p>
         </div>
@@ -19,43 +19,21 @@
 
 <script>
 import ListItems from "@/components/ListItems";
-import {mapActions} from 'vuex';
-import {mapGetters} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 export default {
   components: {
     "list-items": ListItems,
   },
-  data() {
-    return {
-      // todos: [{
-      //   'task': '吃好',
-      //   'status': 'undone'
-      // },
-      // {
-      //   'task': '睡飽',
-      //   'status': 'undone'
-      // },
-      // {
-      //   'task': '多運動',
-      //   'status': 'undone'
-      // }],
-      // inputVal: '',
-    }
+  computed: {
+    ...mapGetters(["allTodos","getInputVal"])
   },
   methods: {
-    addTodo() {
-      this.$store.state.todos.push({'task': this.$store.state.inputVal,'status':'not-done','style': 'none'});
-      this.$store.state.inputVal = '';
-      // this.todos.push({'task': this.inputVal,'status':'not-done','style': 'none'});
-      // this.inputVal = '';
-    },
-    deleteTodo(index) {
-      this.$store.state.todos.splice(index,1)
-    },
     ...mapActions ([
+      'addTodo',
       'markDone',
-      'clearAll'
+      'clearAll',
+      'deleteTodo'
     ])
     // markDone(index) {
     //   //this.$store.state.todos[index].status = 'done'

@@ -7,6 +7,7 @@
         <router-link to="/dialog">Dialog</router-link>
         <router-link to="/todo">Todo</router-link>
         <router-link to="/todo-advanced">Todo-Advanced</router-link>
+        <router-link to="/todo-example">Todo-Example</router-link>
       </nav>
     </div>
 </template>
