@@ -36,6 +36,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "todoadvanced" */ '../views/TodoAdvanced.vue')
   },
   {
+    path: '/todo-example',
+    name: 'TodoExample',
+    component: () => import(/* webpackChunkName: "todoexample" */ '../views/TodoExample.vue')
+  },
+  {
     path: '/404',
     alias: '*',
     name: 'notFound',

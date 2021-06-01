@@ -1,51 +1,56 @@
 <template>
   <div>
-    <input type="text" @keyup.enter="addTodo()" v-model="inputVal" />
-    <div>
-      <p v-for="(item,index) in todos" :key="index" @click.once="markDone(index)" @dblclick="deleteTodo(index)" :class="item.status">
-        {{item.task}}
-      </p>
-    </div>
-    <br>
-    <button @click="clearAll()">Clear All</button>
+    <list-items>
+      <template v-slot:title>
+        To Do List
+      </template>
+      <template v-slot:contnet>
+        <form @submit="onSubmit">
+          <input type="text" v-model="title" placeholder="Add todo...">
+          <input type="submit" value="Submit">
+        </form>
+        <!-- <input type="text" @keyup.enter="addTodo" v-model="title" /> -->
+        <div>
+          <p v-for="(item,index) in allAdvancedTodos" :key="index" @click.once="markDone(index)" @dblclick="deleteTodo(index)" :class="item.status">
+            {{item.task}}
+          </p>
+        </div>
+      </template>
+    </list-items>
+    <button @click="clearAll()" class="btn-style">Clear All</button>
   </div>
 </template>
 
 <script>
-export default ({
+import ListItems from "@/components/ListItems";
+import { mapActions, mapGetters } from 'vuex';
+
+export default {
   data() {
     return {
-      todos: [{
-        'task': '吃好',
-        'status': 'undone'
-      },
-      {
-        'task': '睡飽',
-        'status': 'undone'
-      },
-      {
-        'task': '多運動',
-        'status': 'undone'
-      }],
-      inputVal: '',
+      title: ''
     }
   },
+  components: {
+    "list-items": ListItems,
+  },
   methods: {
-    addTodo() {
-      this.todos.push({'task': this.inputVal,'status':'not-done','style': 'none'});
-      this.inputVal = '';
-    },
-    markDone(index) {
-      this.todos[index].status = 'done'
-    },
-    deleteTodo(index) {
-      this.todos.splice(index,1)
-    },
-    clearAll() {
-      this.todos = [];
-    },
-  }
-})
+    ...mapActions ([
+      'fetchTodos',
+      'addTodo',
+      'markDone',
+      'clearAll',
+      'deleteTodo'
+    ]),
+    onSubmit(e) {
+      e.preventDefault();
+      this.addTodo(this.title);
+    }
+  },
+  computed: {
+    ...mapGetters(["allAdvancedTodos"]),
+  },
+}
 </script>
 
 <style scoped>
@@ -55,7 +60,7 @@ export default ({
 .done {
   text-decoration: line-through;
 }
-button {
+.btn-style {
   width: 165px;
   padding: 5px;
   background-color: #65809b;
@@ -64,13 +69,13 @@ button {
   border-radius: 5px;
 }
 
-button:hover {
+.btn-style:hover {
   background-color: #516b85;
   border: 2px solid #516b85;
   cursor: pointer;
 }
 
-button:disabled {
+.btn-style:disabled {
   background-color: lightgray;
   border: 2px solid lightgray;
   cursor: not-allowed;
