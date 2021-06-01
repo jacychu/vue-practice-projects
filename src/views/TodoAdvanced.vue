@@ -5,9 +5,13 @@
         To Do List
       </template>
       <template v-slot:contnet>
-        <input type="text" @keyup.enter="addTodo()" v-model="getInputVal" />
+        <form @submit="onSubmit">
+          <input type="text" v-model="title" placeholder="Add todo...">
+          <input type="submit" value="Submit">
+        </form>
+        <!-- <input type="text" @keyup.enter="addTodo" v-model="title" /> -->
         <div>
-          <p v-for="(item,index) in allTodos" :key="index" @click.once="markDone(index)" @dblclick="deleteTodo(index)" :class="item.status">
+          <p v-for="(item,index) in allAdvancedTodos" :key="index" @click.once="markDone(index)" @dblclick="deleteTodo(index)" :class="item.status">
             {{item.task}}
           </p>
         </div>
@@ -19,32 +23,33 @@
 
 <script>
 import ListItems from "@/components/ListItems";
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
+  data() {
+    return {
+      title: ''
+    }
+  },
   components: {
     "list-items": ListItems,
   },
-  computed: {
-    ...mapGetters(["allTodos","getInputVal"])
-  },
   methods: {
     ...mapActions ([
+      'fetchTodos',
       'addTodo',
       'markDone',
       'clearAll',
       'deleteTodo'
-    ])
-    // markDone(index) {
-    //   //this.$store.state.todos[index].status = 'done'
-    //   this.$store.dispatch('markDone',index);
-    // },
-    // clearAll() {
-    //   // this.$store.state.todos = [];
-    //   // this.$store.commit('clearAll');
-    //   this.$store.dispatch('clearAll');
-    // },
-  }
+    ]),
+    onSubmit(e) {
+      e.preventDefault();
+      this.addTodo(this.title);
+    }
+  },
+  computed: {
+    ...mapGetters(["allAdvancedTodos"]),
+  },
 }
 </script>
 

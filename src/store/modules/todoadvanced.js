@@ -1,4 +1,3 @@
-// import axios from 'axios';
 
 const state = {
   todos: [{
@@ -13,15 +12,13 @@ const state = {
     'task': '多運動',
     'status': 'undone'
   }],
-  inputVal: '',
 };
 const getters = {
-  allTodos: state => state.todos,
-  getInputVal: state => state.inputVal
+  allAdvancedTodos: state => state.todos,
 };
 const actions = {
-  addTodo: context => {
-    context.commit('addTodo')
+  addTodo: (context,payload) => {
+    context.commit('addTodo',payload)
   },
   clearAll: context => {
     setTimeout(function() {
@@ -38,14 +35,10 @@ const actions = {
   }
 };
 const mutations = {
-  addTodo: state => {
-    state.todos.push({'task': state.inputVal,'status':'not-done','style': 'none'});
-    state.inputVal = '';
+  addTodo: (state,payload) => {
+    state.todos.push({'task': payload,'status':'not-done','style': 'none'});
   },
   clearAll: state => {
-    // setTimeout(function() {
-    //   state.todos = [];
-    // },3000)
     state.todos = [];
   },
   markDone: (state,payload) => {
