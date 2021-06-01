@@ -21,7 +21,6 @@ const actions = {
     await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}}`);
     commit('removeTodo', id);
   }
-
 };
 const mutations = {
   setTodos: (state, todos) => (state.todos = todos),

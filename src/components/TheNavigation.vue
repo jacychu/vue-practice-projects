@@ -8,6 +8,7 @@
         <router-link to="/todo">Todo</router-link>
         <router-link to="/todo-advanced">Todo-Advanced</router-link>
         <router-link to="/todo-example">Todo-Example</router-link>
+        <router-link to="/covid">Covid</router-link>
       </nav>
     </div>
 </template>
